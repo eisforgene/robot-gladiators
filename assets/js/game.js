@@ -6,21 +6,50 @@
 // "REPLAY" - Player wants to play again
 //    * Visit shop
 
+
+var randomNumber = function(min, max) {
+  var value = Math.floor(Math.random() * (max - min + 1) + min);
+
+  return value;
+};
+
 // window.alert("Welcome to Robot Gladiators!"); 
+var fightOrSkip = function() {
+  var promptFight = window.prompt('Would you like to FIGHT or SKIP this battle? Enter "FIGHT" or "SKIP" to choose.');
+
+  // enter the conditional recursive function call here!
+  if (promptFight === "" || promptFight === null) {
+    window.alert("You need to provide a valid answer! Please try again.");
+    return fightOrSkip(); 
+  }
+  
+  // if (!promptFight) { 
+  //   window.alert("You need to provide a valid answer! Please try again.");
+  //   return fightOrSkip(); 
+  // }
+
+  promptFight = promptFight.toLowerCase();
+
+  if (promptFight === "skip") {
+    var confirmSkip = window.confirm("Are you sure you'd like to quit?");
+
+    if (confirmSkip) {
+      window.alert(playerInfo.name + " has decided to skip this fight. Goodbye!");
+      playerInfo.playerMoney = Math.max(playerInfo.money - 10); // stop while() loop using break; and enter next fight
+      
+      return true;
+    }
+  }
+  return false; 
+}
+
+
 var fight = function(enemy) {
   while(playerInfo.health > 0 && enemy.health > 0) {
-    var promptFight = window.prompt("Would you like to FIGHT or SKIP this battle? Enter 'FIGHT' or 'SKIP' to choose");
-      
-    if (promptFight === "skip" || promptFight === "SKIP") { // If player decides to skip
-      var confirmSkip = window.confirm("Are you sure you'd like to quit?");
-
-      if (confirmSkip) { // if yes (true), leave fight
-        window.alert(playerInfo.name + " has decided to skip this fight. Goodbye!");
-        playerInfo.money = Math.max(0, playerInfo.money - 10); // subtract money for skipping the fight
-        console.log("playerInfo.money", playerInfo.money);
-        break;
-      }
+    if (fightOrSkip()) { // if true, leave fight by breaking loop
+      break;
     }
+
     var damage = randomNumber(playerInfo.attack - 3, playerInfo.attack);
 
     enemy.health = Math.max(0, enemy.health - damage); // Subtract the value of 'playerInfo.attack' from the value of 'enemy.health' and use that result to udpate the value in the 'enemy.health' variable
@@ -113,12 +142,6 @@ var shop = function() {
       shop();
       break;
   }
-};
-
-var randomNumber = function(min, max) {
-  var value = Math.floor(Math.random() * (max - min + 1) + min);
-
-  return value;
 };
 
 var getPlayerName = function() {
